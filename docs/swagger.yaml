@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Exchange Rate API
+  description: An API for fetching exchange rates from multiple providers.
+  version: 1.0.0
+paths:
+  /exchange-rate:
+    get:
+      summary: Get exchange rate for a currency pair
+      description: Fetch the exchange rate for a specified currency pair using multiple rate providers.
+      parameters:
+        - name: pair
+          in: query
+          description: The currency pair in the format "BASE-QUOTE" (e.g., USD-NGN, EUR-USD).
+          required: true
+          schema:
+            type: string
+            example: "USD-NGN"
+      responses:
+        '200':
+          description: Successful response with the exchange rate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pair:
+                    type: string
+                    example: "USD-NGN"
+                  rate:
+                    type: number
+                    format: float
+                    example: 756.34
+        '400':
+          description: Invalid currency pair provided.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid currency pair"
+        '503':
+          description: Rate provider service unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Rate provider not available"
+components:
+  schemas:
+    ExchangeRateResponse:
+      type: object
+      properties:
+        pair:
+          type: string
+          example: "USD-NGN"
+        rate:
+          type: number
+          format: float
+          example: 756.34
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid currency pair"
