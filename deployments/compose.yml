@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  currency-exchange-rate:
+    container_name: currency-exchange-rate
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ../.:/app
+    ports:
+      - "15001:15001"
+    environment:
+      - AWS_CREDENTIALS="my-secret"
+      - API_PORT=15001
+    command: air -c ./deployments/air.toml
+

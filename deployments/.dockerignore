@@ -1,0 +1,24 @@
+../README.md
+
+# Ignore logs and temporary files
+../*.log
+../*.tmp
+
+# Ignore build artifacts
+../bin/
+../build/
+
+
+# Ignore IDE/editor configurations
+../*.idea/
+../*.vscode/
+
+# Ignore Git files
+../.git/
+../.gitignore
+
+# Ignore Docker-specific files
+compose.yml
+bin
+tmp
+

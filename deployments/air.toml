@@ -1,0 +1,5 @@
+[build]
+cmd = "go build -o deployments/bin/app ./cmd/*.go"
+bin = "deployments/bin/app"
+exclude_dir = ["deployments/tmp", "deployments/bin", "assets"]
+delay = 500 # delay in ms for auto-reload
