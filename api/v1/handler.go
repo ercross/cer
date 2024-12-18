@@ -40,10 +40,20 @@ func exchangeRate(providerA exchange.RateProvider, providerB exchange.RateProvid
 		var result exchangeRateProviderResult
 		select {
 		case result = <-chanA:
-			responseSent = handleResult(result, pair, w, providerA.Name())
+			if result.err != nil {
+				secondResult := <-chanB
+				responseSent = handleResult(secondResult, pair, w, providerB.Name())
+			} else {
+				responseSent = handleResult(result, pair, w, providerA.Name())
+			}
 
 		case result = <-chanB:
-			responseSent = handleResult(result, pair, w, providerB.Name())
+			if result.err != nil {
+				secondResult := <-chanA
+				responseSent = handleResult(secondResult, pair, w, providerA.Name())
+			} else {
+				responseSent = handleResult(result, pair, w, providerB.Name())
+			}
 		}
 
 		if !responseSent {
@@ -66,7 +76,7 @@ func isValidCurrencyPair(pair string) error {
 // handleResult and return a boolean to indicate if response was sent
 func handleResult(result exchangeRateProviderResult, pair string, w http.ResponseWriter, providerName string) bool {
 	if result.err != nil {
-		log.Printf("%s: %w", providerName, result.err)
+		log.Printf("%s: %v", providerName, result.err)
 		return false
 	} else {
 		utils.SendApiResponse(w, 200, map[string]interface{}{
